@@ -30,47 +30,111 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   void initState() {
     super.initState();
-    ref.read( nowPlayingMoviesProvider.notifier).loadNextPage();
+    ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+    ref.read( popularMoviesProvider.notifier ).loadNextPage();
+    ref.read( upcomingMoviesProvider.notifier ).loadNextPage();
+    ref.read( topRatedmoviesProvider.notifier ).loadNextPage();
+    
   }
 
 
   @override
   Widget build(BuildContext context) {
 
-    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final initialLoading = ref.watch(initialLoadingProvider);
+
+    if(initialLoading) return const FullScreenLoader();
+
     final slideShowMovies = ref.watch(moviesSlideshowProvider);
+    final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final popularMovies = ref.watch(popularMoviesProvider);
+    final topRatedMovies = ref.watch(topRatedmoviesProvider);
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
     // if( nowPlayingMovies.length == 0 ) return CircularProgressIndicator();
-    return Column(
-      children: [
-
-        const CustomAppbar(),
 
 
-        MoviesSlideshow(movies: slideShowMovies),
+    return CustomScrollView(
+      slivers: [
 
-        MovieHorizontalListview(
-          movies: nowPlayingMovies,
-          title: 'En cines',
-          subTitle: 'Lunes 20',
-          loadNextPage: () {
-
-            ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-          },
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: CustomAppbar(),
           ),
+        ),
 
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            return Column(
+              children: [
+            
+                // const CustomAppbar(),
+            
+            
+                MoviesSlideshow(movies: slideShowMovies),
+            
+                MovieHorizontalListview(
+                  movies: nowPlayingMovies,
+                  title: 'En cines',
+                  subTitle: 'Lunes 20',
+                  loadNextPage: () 
+                    {
+                      ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+            
+                MovieHorizontalListview(
+                  movies: upcomingMovies,
+                  title: 'Próximamente',
+                  subTitle: 'En este mes',
+                  loadNextPage: () 
+                    {
+                      ref.read(upcomingMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+                MovieHorizontalListview(
+                  movies: popularMovies,
+                  title: 'Populares',
+                  // subTitle: '',
+                  loadNextPage: () 
+                    {
+                      ref.read(popularMoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
+            
+                MovieHorizontalListview(
+                  movies: topRatedMovies,
+                  title: 'Mejor calificadas',
+                  subTitle: 'Desde Siempre',
+                  loadNextPage: () 
+                    {
+                      ref.read(topRatedmoviesProvider.notifier).loadNextPage();
+                    },
+                  ),
 
-        // Expanded(
-        //   child: ListView.builder(
-        //     itemCount: nowPlayingMovies.length,
-        //     itemBuilder: (context, index){
-        //       final movie = nowPlayingMovies[index];
-        //       return ListTile(
-        //         title: Text(movie.title),
-        //       );
-        //     },
-        //   ),
-        // )
-      ],
+                  const SizedBox( height: 10,)
+            
+            
+                // Expanded(
+                //   child: ListView.builder(
+                //     itemCount: nowPlayingMovies.length,
+                //     itemBuilder: (context, index){
+                //       final movie = nowPlayingMovies[index];
+                //       return ListTile(
+                //         title: Text(movie.title),
+                //       );
+                //     },
+                //   ),
+                // )
+              ],
+            );
+          },
+          childCount: 1
+          ,))
+
+      ]
+      
+      
     );
   }
 }
