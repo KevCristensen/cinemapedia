@@ -160,7 +160,7 @@ class _ActorsByMovie extends ConsumerWidget {
           final actor = actors[index];
 
           return Container(
-            padding: EdgeInsets.all(9.0),
+            padding: const EdgeInsets.all(9.0),
             width: 135,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
