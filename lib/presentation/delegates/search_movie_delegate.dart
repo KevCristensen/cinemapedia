@@ -1,6 +1,7 @@
 
 
 
+import 'package:cinemapedia/config/helpers/human_formats.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
@@ -95,7 +96,7 @@ class _MovieItem extends StatelessWidget {
           SizedBox(
             width: size.width * 0.2,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               child: Image.network(
                 movie.posterPath,
                 loadingBuilder: (context, child, loadingProgress) => FadeIn(child: child),
@@ -118,8 +119,19 @@ class _MovieItem extends StatelessWidget {
                   ? Text( '${movie.overview.substring(0,100)}...' )
                   : Text(movie.overview),
 
+                  Row(
+                    children: [
+                      Icon(Icons.star_half_rounded, color: Colors.yellow.shade800,),
+                      const SizedBox(width: 5,),
+                      Text(
+                        HumanFormats.number(movie.voteAverage, 1),
+                        style: textStyle.bodyMedium!.copyWith(color: Colors.yellow.shade900),
+                        ),
+                    ],
+                  )
 
-                  
+
+
               ],
             ),
             )
