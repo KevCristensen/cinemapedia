@@ -14,10 +14,15 @@ class SearchMovieDelegate extends SearchDelegate<Movie?>{
 
   final SearchMoviesCallback searchMovies;
 
+  final List<Movie> initialMovies;
+
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
   Timer? _debounceTimer;
 
-  SearchMovieDelegate({required this.searchMovies});
+  SearchMovieDelegate({
+    required this.searchMovies,
+    required this.initialMovies,
+    });
 
   void clearStreams() {
     debouncedMovies.close();
@@ -29,10 +34,10 @@ class SearchMovieDelegate extends SearchDelegate<Movie?>{
 
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
 
-      if (query.isEmpty ){
-        debouncedMovies.add([]);
-        return;
-      }
+      // if (query.isEmpty ){
+      //   debouncedMovies.add([]);
+      //   return;
+      // }
 
       final movies = await searchMovies(query);
 
@@ -84,6 +89,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?>{
 
     return StreamBuilder(
       // future: searchMovies(query),
+      initialData: initialMovies,
       stream: debouncedMovies.stream,
       builder: (context, snapshot) {
 
