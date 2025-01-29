@@ -87,7 +87,6 @@ class SearchMovieDelegate extends SearchDelegate<Movie?>{
       stream: debouncedMovies.stream,
       builder: (context, snapshot) {
 
-
         //! print('Realizando peticion');
         final movies = snapshot.data ?? [];
 
